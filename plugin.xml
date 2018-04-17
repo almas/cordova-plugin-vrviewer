@@ -61,8 +61,8 @@
   <!--android-->
   <platform name="android">
     <config-file target="res/xml/config.xml" parent="/*">
-      <feature name="Vr">
-        <param name="android-package" value="com.cordova.plugin.vrviewer.Vr"/>
+      <feature name="VrViewer">
+        <param name="android-package" value="com.cordova.plugin.vrviewer.VrViewer"/>
       </feature>
     </config-file>
     <config-file target="AndroidManifest.xml" parent="/*">
@@ -85,8 +85,9 @@
       </activity>
     </config-file>
     <framework src="src/android/vr.gradle" custom="true" type="gradleReference"/>
-    <source-file src="src/android/Vr.java" target-dir="src/com/cordova/plugin/vrviewer"/>
+    <source-file src="src/android/VrViewer.java" target-dir="src/com/cordova/plugin/vrviewer"/>
     <source-file src="src/android/view/VideoActivity.java" target-dir="src/com/cordova/plugin/vrviewer"/>
+    <source-file src="src/android/view/PanoActivity.java" target-dir="src/com/cordova/plugin/vrviewer"/>
     <source-file src="src/android/res/vr_video_main.xml" target-dir="res/layout"/>
     <source-file src="src/android/res/ic_menu_back.png" target-dir="res/drawable"/>
   </platform>

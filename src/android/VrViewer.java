@@ -11,9 +11,9 @@ import org.json.JSONObject;
 
 import android.content.Intent;
 
-public class Vr extends CordovaPlugin {
+public class VrViewer extends CordovaPlugin {
 
-    private static final String TAG = Vr.class.getSimpleName();
+    private static final String TAG = VrViewer.class.getSimpleName();
     public CallbackContext callbackContext;
 
     @Override
@@ -43,4 +43,3 @@ public class Vr extends CordovaPlugin {
     }
 
 }
-

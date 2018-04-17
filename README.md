@@ -5,7 +5,7 @@ See [GVR](https://developers.google.com/vr) for more information.
 
 # Installation
 
-`$ ionic plugin add cordova-plugin-vrviewer`
+`$ cordova plugin add cordova-plugin-vrviewer`
 
 # How to use
 
