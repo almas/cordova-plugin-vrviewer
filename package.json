@@ -1,0 +1,27 @@
+{
+  "name": "cordova-plugin-vrviewer",
+  "version": "1.3.1",
+  "description": "vr plugin",
+  "cordova": {
+    "id": "cordova-plugin-vrviewer",
+    "platforms": [
+      "ios"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/almas/cordova-plugin-vrviewer.git"
+  },
+  "keywords": [
+    "vr",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "author": "Almas",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/almas/cordova-plugin-vrviewer/issues"
+  },
+  "homepage": "https://github.com/almas/cordova-plugin-vrviewer#readme"
+}
