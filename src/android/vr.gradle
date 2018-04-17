@@ -6,17 +6,16 @@ dependencies {
     compile 'com.google.vr:sdk-videowidget:1.140.0'
 }
 
-//repositories {
-    // For GVR components, the official source of the .aars is the Google
-    // repository.
+repositories {
     //maven {
-    //    url "http://google.bintray.com/googlevr"
+    //    url "http://google.com/googlevr"
     //}
+    google()
     // We also use components from JCenter.
-    //jcenter()
+    jcenter()
     // You can also use a local Maven repository if desired.
-    //()
-//}
+    ()
+}
 
 android {
     packagingOptions {
