@@ -6,57 +6,30 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Pair;
 import android.view.View;
 import android.widget.Toast;
-import android.content.res.AssetManager;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
-import android.widget.TextView;
 
+import com.google.vr.sdk.widgets.common.VrWidgetView;
 import com.google.vr.sdk.widgets.pano.VrPanoramaEventListener;
 import com.google.vr.sdk.widgets.pano.VrPanoramaView;
 import com.google.vr.sdk.widgets.pano.VrPanoramaView.Options;
+
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.cordova.CordovaActivity;
+import org.json.JSONObject;
 
-import com.google.vr.sdk.widgets.common.VrWidgetView;
 
 public class PanoActivity extends CordovaActivity {
 
-    private static final String TAG = VideoActivity.class.getSimpleName();
+    private static final String TAG = PanoActivity.class.getSimpleName();
 
-    protected VrVideoView videoWidgetView;
-    private boolean isPaused = false;
+    protected VrPanoramaView panoWidgetView;
     private CordovaActivity that = null;
 
-    /**
-     * Preserve the video's state when rotating the phone.
-     */
-    private static final String STATE_IS_PAUSED = "isPaused";
-    private static final String STATE_PROGRESS_TIME = "progressTime";
-    /**
-     * The video duration doesn't need to be preserved, but it is saved in this example. This allows
-     * the seekBar to be configured during {@link #onRestoreInstanceState(Bundle)} rather than waiting
-     * for the video to be reloaded and analyzed. This avoid UI jank.
-     */
-    private static final String STATE_VIDEO_DURATION = "videoDuration";
-
-    public static final int LOAD_VIDEO_STATUS_UNKNOWN = 0;
-    public static final int LOAD_VIDEO_STATUS_SUCCESS = 1;
-    public static final int LOAD_VIDEO_STATUS_ERROR = 2;
-
-    private int loadVideoStatus = LOAD_VIDEO_STATUS_UNKNOWN;
-
-    /**
-     * Tracks the file to be loaded across the lifetime of this app.
-     **/
     private Uri fileUri;
 
     /**
@@ -66,16 +39,14 @@ public class PanoActivity extends CordovaActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ;
-        setContentView(getApplication().getResources().getIdentifier("vr_video_main","layout",getApplication().getPackageName()));
+        setContentView(getApplication().getResources().getIdentifier("vr_viewer_main","layout",getApplication().getPackageName()));
 
-        videoWidgetView = (VrVideoView) findViewById(getApplication().getResources().getIdentifier("video_view","id",getApplication().getPackageName()));
-        videoWidgetView.setDisplayMode(VrVideoView.DisplayMode.FULLSCREEN_MONO);
-        videoWidgetView.setVisibility(View.INVISIBLE);
-        videoWidgetView.setInfoButtonEnabled(false);
-        videoWidgetView.setTransitionViewEnabled(false);
-        videoWidgetView.setEventListener(new ActivityEventListener());
-        loadVideoStatus = LOAD_VIDEO_STATUS_UNKNOWN;
+        panoWidgetView = (VrPanoramaView) findViewById(getApplication().getResources().getIdentifier("vr_view","id",getApplication().getPackageName()));
+        panoWidgetView.setDisplayMode(VrPanoramaView.DisplayMode.FULLSCREEN_MONO);
+        panoWidgetView.setVisibility(View.INVISIBLE);
+        panoWidgetView.setInfoButtonEnabled(false);
+        panoWidgetView.setTransitionViewEnabled(false);
+        panoWidgetView.setEventListener(new ActivityEventListener());
 
         that = this;
         handleIntent(getIntent());
@@ -94,18 +65,18 @@ public class PanoActivity extends CordovaActivity {
         handleIntent(intent);
     }
 
-    public int getLoadVideoStatus() {
-        return loadVideoStatus;
-    }
-
     private void handleIntent(Intent intent) {
         String url = intent.getStringExtra("url");
+        String optionsRaw = intent.getStringExtra("options");
+        JSONObject optionsJSON = new JSONObject(optionsRaw);
+        String inputTypeString = optionsJSON.getString("inputType");
+
         if (url != null) {
             fileUri = Uri.parse(url);
             Log.d(TAG, "Using file " + fileUri.toString());
         } else {
             fileUri = null;
-            Toast.makeText(VideoActivity.this, "Video file does not exist", Toast.LENGTH_LONG)
+            Toast.makeText(PanoActivity.this, "Image file does not exist", Toast.LENGTH_LONG)
                     .show();
             return;
         }
@@ -118,130 +89,82 @@ public class PanoActivity extends CordovaActivity {
                     Log.d(TAG, subString);
 
                     Options options = new Options();
-                    if (subString.equalsIgnoreCase("http") || subString.equalsIgnoreCase("file")) {
-                        options.inputFormat = Options.FORMAT_DEFAULT;
-                        options.inputType = Options.TYPE_STEREO_OVER_UNDER;
-                        videoWidgetView.loadVideo(fileUri, options);
-                    } else {
-                        options.inputType = Options.TYPE_STEREO_OVER_UNDER;
-                        videoWidgetView.loadVideoFromAsset(fileUri.toString(), options);
-                    }
-                } catch (IOException e) {
-                    // An error here is normally due to being unable to locate the file.
-                    loadVideoStatus = LOAD_VIDEO_STATUS_ERROR;
+                    // if (subString.equalsIgnoreCase("http") || subString.equalsIgnoreCase("file")) {
+
+                    // } else {
+
+                    // }
+
+                    options.inputType = Options.TYPE_STEREO_OVER_UNDER;
+
+                    panoWidgetView.loadImageFromBitmap(BitmapFactory.decodeFile(fileUri.getPath()), options);
+
+                } catch (Exception e) {
                     // Since this is a background thread, we need to switch to the main thread to show a toast.
-                    videoWidgetView.post(new Runnable() {
+                    panoWidgetView.post(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(VideoActivity.this, "Unable to open video file", Toast.LENGTH_LONG)
+                            Toast.makeText(PanoActivity.this, "Unable to open panorama image", Toast.LENGTH_LONG)
                                     .show();
                         }
                     });
-                    Log.e(TAG, "Could not open video: " + e);
+                    Log.e(TAG, "Could not open pano: " + e);
                 }
             }
         });
     }
 
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putLong(STATE_PROGRESS_TIME, videoWidgetView.getCurrentPosition());
-        savedInstanceState.putLong(STATE_VIDEO_DURATION, videoWidgetView.getDuration());
-        savedInstanceState.putBoolean(STATE_IS_PAUSED, isPaused);
-        super.onSaveInstanceState(savedInstanceState);
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
-        long progressTime = savedInstanceState.getLong(STATE_PROGRESS_TIME);
-        videoWidgetView.seekTo(progressTime);
-
-        isPaused = savedInstanceState.getBoolean(STATE_IS_PAUSED);
-        if (isPaused) {
-            videoWidgetView.pauseVideo();
-        }
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         // Resume the 3D rendering.
-        videoWidgetView.resumeRendering();
+        panoWidgetView.resumeRendering();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         // Prevent the view from rendering continuously when in the background.
-        videoWidgetView.pauseRendering();
-        // If the video is playing when onPause() is called, the default behavior will be to pause
-        // the video and keep it paused when onResume() is called.
-        isPaused = true;
+        panoWidgetView.pauseRendering();
     }
 
     @Override
     public void onDestroy() {
-        videoWidgetView.shutdown();
+        panoWidgetView.shutdown();
         super.onDestroy();
-    }
-
-    private void togglePause() {
-        if (isPaused) {
-            videoWidgetView.playVideo();
-        } else {
-            videoWidgetView.pauseVideo();
-        }
-        isPaused = !isPaused;
     }
 
     /**
      * Listen to the important events from widget.
      */
-    private class ActivityEventListener extends VrVideoEventListener {
+    private class ActivityEventListener extends VrPanoramaEventListener {
         /**
-         * Called by video widget on the UI thread when it's done loading the video.
+         * Called by pano widget on the UI thread when it's done loading the pano.
          */
         @Override
         public void onLoadSuccess() {
-            Log.i(TAG, "Sucessfully loaded video " + videoWidgetView.getDuration());
-            loadVideoStatus = LOAD_VIDEO_STATUS_SUCCESS;
+            Log.i(TAG, "Sucessfully loaded panorama image");
         }
 
         @Override
         public void onDisplayModeChanged(int newDisplayMode) {
             if (newDisplayMode != VrWidgetView.DisplayMode.FULLSCREEN_STEREO &&
                     newDisplayMode != VrWidgetView.DisplayMode.FULLSCREEN_MONO){
-                videoWidgetView.setVisibility(View.INVISIBLE);
+                panoWidgetView.setVisibility(View.INVISIBLE);
                 that.finish();
             }
         }
         /**
-         * Called by video widget on the UI thread on any asynchronous error.
+         * Called by pano widget on the UI thread on any asynchronous error.
          */
         @Override
         public void onLoadError(String errorMessage) {
-            // An error here is normally due to being unable to decode the video format.
-            loadVideoStatus = LOAD_VIDEO_STATUS_ERROR;
+            // An error here is normally due to being unable to decode the pano format.
             Toast.makeText(
-                    VideoActivity.this, "Error loading video file", Toast.LENGTH_LONG)
+                    PanoActivity.this, "Error loading panorama image", Toast.LENGTH_LONG)
                     .show();
-            Log.e(TAG, "Error loading video: " + errorMessage);
+            Log.e(TAG, "Error loading panorama image: " + errorMessage);
         }
 
-        @Override
-        public void onClick() {
-            togglePause();
-        }
-
-        /**
-         * Make the video play in a loop. This method could also be used to move to the next video in
-         * a playlist.
-         */
-        @Override
-        public void onCompletion() {
-            videoWidgetView.seekTo(0);
-        }
     }
 }

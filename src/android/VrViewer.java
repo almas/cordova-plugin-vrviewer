@@ -11,9 +11,9 @@ import org.json.JSONObject;
 
 import android.content.Intent;
 
-public class VrViewer extends CordovaPlugin {
+public class VRViewer extends CordovaPlugin {
 
-    private static final String TAG = VrViewer.class.getSimpleName();
+    private static final String TAG = VRViewer.class.getSimpleName();
     public CallbackContext callbackContext;
 
     @Override
@@ -24,13 +24,14 @@ public class VrViewer extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         this.callbackContext = callbackContext;
         try {
-            if (action.equals("startPlaying")) {
-                Intent intent = new Intent(cordova.getActivity(), VideoActivity.class);
+            if (action.equals("playVideo") || action.equals("startPano")) {
+                Intent intent = new Intent(cordova.getActivity(), MainActivity.class);
                 intent.putExtra("url", args.getString(0));
+                intent.putExtra("options", args.getString(1));
                 cordova.getActivity().startActivity(intent);
-                this.callbackContext.success("startPlaying");
-            } else if (action.equals("stopPlaying")) {
-                this.callbackContext.success("stopPlaying");
+                this.callbackContext.success(action);
+            } else if (action.equals("stopVideo")) {
+                this.callbackContext.success("stopVideo");
             } else {
                 this.callbackContext.error("Invalid action");
                 return false;

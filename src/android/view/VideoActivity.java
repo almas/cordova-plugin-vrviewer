@@ -1,8 +1,5 @@
 package com.cordova.plugin.vrviewer;
 
-import java.io.IOException;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,13 +7,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import org.apache.cordova.CordovaActivity;
-
 import com.google.vr.sdk.widgets.common.VrWidgetView;
-
 import com.google.vr.sdk.widgets.video.VrVideoEventListener;
 import com.google.vr.sdk.widgets.video.VrVideoView;
 import com.google.vr.sdk.widgets.video.VrVideoView.Options;
+
+import java.io.IOException;
+
+import org.apache.cordova.CordovaActivity;
+import org.json.JSONObject;
 
 public class VideoActivity extends CordovaActivity {
 
@@ -24,7 +23,7 @@ public class VideoActivity extends CordovaActivity {
 
     protected VrVideoView videoWidgetView;
     private boolean isPaused = false;
-    private Activity that = null;
+    private CordovaActivity that = null;
 
     /**
      * Preserve the video's state when rotating the phone.
@@ -57,9 +56,9 @@ public class VideoActivity extends CordovaActivity {
         super.onCreate(savedInstanceState);
 
         ;
-        setContentView(getApplication().getResources().getIdentifier("vr_video_main","layout",getApplication().getPackageName()));
+        setContentView(getApplication().getResources().getIdentifier("vr_viewer_main","layout",getApplication().getPackageName()));
 
-        videoWidgetView = (VrVideoView) findViewById(getApplication().getResources().getIdentifier("video_view","id",getApplication().getPackageName()));
+        videoWidgetView = (VrVideoView) findViewById(getApplication().getResources().getIdentifier("vr_view","id",getApplication().getPackageName()));
         videoWidgetView.setDisplayMode(VrVideoView.DisplayMode.FULLSCREEN_MONO);
         videoWidgetView.setVisibility(View.INVISIBLE);
         videoWidgetView.setInfoButtonEnabled(false);
@@ -90,6 +89,11 @@ public class VideoActivity extends CordovaActivity {
 
     private void handleIntent(Intent intent) {
         String url = intent.getStringExtra("url");
+
+        String optionsRaw = intent.getStringExtra("options");
+        JSONObject optionsJSON = new JSONObject(optionsRaw);
+        String inputTypeString = optionsJSON.getString("inputType");
+
         if (url != null) {
             fileUri = Uri.parse(url);
             Log.d(TAG, "Using file " + fileUri.toString());

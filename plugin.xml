@@ -2,20 +2,20 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-vrviewer" version="1.0.0">
 
-    <name>vr</name>
-    <description>vr plugin</description>
+    <name>vrviewer</name>
+    <description>VR viewer with GVR plugin</description>
     <license>MIT</license>
-    <keywords>vr</keywords>
+    <keywords>vrviewer, gvr, vr</keywords>
 
-    <js-module src="www/vr.js" name="vr">
-        <clobbers target="vr"/>
+    <js-module src="www/vrviewer.js" name="vrviewer">
+        <clobbers target="vrViewer"/>
     </js-module>
 
     <!-- ios -->
     <platform name="ios">
         <config-file target="config.xml" parent="/*">
-            <feature name="Vr">
-                <param name="ios-package" value="VrModule"/>
+            <feature name="VRViewer">
+                <param name="ios-package" value="VRViewerModule"/>
             </feature>
         </config-file>
         <config-file target="*-Info.plist" parent="CFBundleDevelopmentRegion">
@@ -51,15 +51,15 @@
         <header-file src="src/ios/GVRVideoView.h"/>
         <header-file src="src/ios/GVRWidgetView.h"/>
 
-        <header-file src="src/ios/VrModule.h"/>
-        <source-file src="src/ios/VrModule.m"/>
+        <header-file src="src/ios/VRViewerModule.h"/>
+        <source-file src="src/ios/VRViewerModule.m"/>
     </platform>
 
     <!--android-->
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
-            <feature name="VrViewer">
-                <param name="android-package" value="com.cordova.plugin.vrviewer.VrViewer"/>
+            <feature name="VRViewer">
+                <param name="android-package" value="com.cordova.plugin.vrviewer.VRViewer"/>
             </feature>
         </config-file>
         <config-file target="AndroidManifest.xml" parent="/*">
@@ -76,10 +76,10 @@
             <activity android:name="com.cordova.plugin.vrviewer.PanoActivity" android:configChanges="orientation|keyboardHidden" android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:windowSoftInputMode="stateAlwaysHidden"></activity>
         </config-file>
         <framework src="src/android/build.gradle" custom="true" type="gradleReference"/>
-        <source-file src="src/android/VrViewer.java" target-dir="src/com/cordova/plugin/vrviewer"/>
+        <source-file src="src/android/VRViewer.java" target-dir="src/com/cordova/plugin/vrviewer"/>
         <source-file src="src/android/view/VideoActivity.java" target-dir="src/com/cordova/plugin/vrviewer"/>
         <source-file src="src/android/view/PanoActivity.java" target-dir="src/com/cordova/plugin/vrviewer"/>
-        <source-file src="src/android/res/vr_video_main.xml" target-dir="res/layout"/>
+        <source-file src="src/android/res/vr_viewer_main.xml" target-dir="res/layout"/>
         <source-file src="src/android/res/ic_menu_back.png" target-dir="res/drawable"/>
     </platform>
 </plugin>

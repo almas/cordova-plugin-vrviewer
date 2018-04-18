@@ -1,12 +1,12 @@
 //
-//  VrModule.m
+//  VRViewerModule.m
 //
 //  Created by ChenTivon on 14/7/16.
 //
 
-#import "VrModule.h"
+#import "VRViewerModule.h"
 
-@implementation VrModule
+@implementation VRViewerModule
 
 @synthesize videoView;
 @synthesize isPaused;
@@ -15,26 +15,26 @@
 - (void)pluginInitialize {
 }
 
-- (void) stopPlaying: (CDVInvokedUrlCommand*)command {
+- (void) stopVideo: (CDVInvokedUrlCommand*)command {
     [self stopVideo];
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 
 }
 
-- (void) startPlaying: (CDVInvokedUrlCommand*)command {
+- (void) playVideo: (CDVInvokedUrlCommand*)command {
     NSString* playUrl = [command.arguments objectAtIndex: 0];
-    
+
     if (playUrl == nil) {
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"arg was null"];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         return;
     }
-    
+
     self.currentCallbackId = command.callbackId;
-    
-    NSLog(@"VrModule startPlaying = %@", playUrl);
-    
+
+    NSLog(@"VRViewerModule playVideo = %@", playUrl);
+
     self.videoView  = [[GVRVideoView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
     self.videoView.delegate = self;
     self.videoView.enableFullscreenButton = YES;
@@ -43,9 +43,9 @@
     self.videoView.hidesTransitionView = YES;
     self.videoView.displayMode = kGVRWidgetDisplayModeFullscreen;
     [self.viewController.view addSubview:self.videoView];
-    
+
     self.isPaused = NO;
-    
+
     if ([playUrl hasPrefix:@"http"]) {
         [self.videoView loadFromUrl:[[NSURL alloc] initWithString:playUrl]];
     } else {
