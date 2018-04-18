@@ -9,7 +9,7 @@ See [GVR](https://developers.google.com/vr) for more information.
 
 # How to use
 
-call the vrViewer function directly
+call the **vrViewer** function directly
 
 ## Play VR video ##
 ```
@@ -25,18 +25,12 @@ vrViewer.playVideo(url, options);
 * options: JSON string.
 
 ### inputFormat: ###
-
-**FORMAT_DASH:** 	Indicates that the video uses the MPEG-DASH format.
-
-**FORMAT_HLS:**  	Indicates that the video uses the HTTP Live Streaming (HLS) format.
-
-**FORMAT_DEFAULT:**  	Indicates that the video is in a standalone, non-streaming format using container formats such as mp4, webm, ogg, aac.
-
+    * FORMAT_DASH: 	Indicates that the video uses the MPEG-DASH format.
+    * FORMAT_HLS:  	Indicates that the video uses the HTTP Live Streaming (HLS) format.
+    * FORMAT_DEFAULT:  	Indicates that the video is in a standalone, non-streaming format using container formats such as mp4, webm, ogg, aac.
 ### inputType ###
-
-**TYPE_MONO:**  	Each video frame is a monocular equirectangular panorama.
-
-**TYPE_STEREO_OVER_UNDER:**  	Each video frame contains two vertically-stacked equirectangular panoramas.
+    * TYPE_MONO:  	Each video frame is a monocular equirectangular panorama.
+    * TYPE_STEREO_OVER_UNDER:  	Each video frame contains two vertically-stacked equirectangular panoramas.
 
 `vrViewer.stopVideo()`
 
@@ -54,7 +48,5 @@ vrViewer.startPanorama(url, options);
 * options: JSON string.
 
 ### inputType ###
-
-**TYPE_MONO:**  	Image contains a single equirectangular panorama.
-
-**TYPE_STEREO_OVER_UNDER:**  	Image contains a pair of equally-sized equirectangular vertically-stacked panoramas.
+    * TYPE_MONO:  	Image contains a single equirectangular panorama.
+    * TYPE_STEREO_OVER_UNDER:  	Image contains a pair of equally-sized equirectangular vertically-stacked panoramas.
