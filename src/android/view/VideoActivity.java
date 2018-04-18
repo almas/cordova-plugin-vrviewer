@@ -55,7 +55,6 @@ public class VideoActivity extends CordovaActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ;
         setContentView(getApplication().getResources().getIdentifier("vr_viewer_main","layout",getApplication().getPackageName()));
 
         videoWidgetView = (VrVideoView) findViewById(getApplication().getResources().getIdentifier("vr_view","id",getApplication().getPackageName()));
@@ -91,8 +90,15 @@ public class VideoActivity extends CordovaActivity {
         String url = intent.getStringExtra("url");
 
         String optionsRaw = intent.getStringExtra("options");
-        JSONObject optionsJSON = new JSONObject(optionsRaw);
-        String inputTypeString = optionsJSON.getString("inputType");
+        String inputTypeString = null;
+        String inputFormatString = null;
+        try {
+            JSONObject optionsJSON = new JSONObject(optionsRaw);
+            inputTypeString = optionsJSON.getString("inputType");
+            inputFormatString = optionsJSON.getString("inputFormat");
+        } catch(Exception e) {
+            Log.e(TAG, "JSON error: " + e.toString());
+        }
 
         if (url != null) {
             fileUri = Uri.parse(url);
@@ -112,12 +118,30 @@ public class VideoActivity extends CordovaActivity {
                     Log.d(TAG, subString);
 
                     Options options = new Options();
+
+                    switch(inputTypeString) {
+                        case "TYPE_STEREO_OVER_UNDER":
+                            options.inputFormat = Options.TYPE_STEREO_OVER_UNDER;
+                        break;
+                        default:
+                            options.inputType = Options.TYPE_MONO;
+                    }
+
                     if (subString.equalsIgnoreCase("http")) {
-                        options.inputFormat = Options.FORMAT_HLS;
-                        options.inputType = Options.TYPE_MONO;
+
+                        switch(inputFormatString) {
+                            case "FORMAT_DASH":
+                                options.inputFormat = Options.FORMAT_DASH;
+                            break;
+                            case "FORMAT_HLS":
+                                options.inputFormat = Options.FORMAT_HLS;
+                            break;
+                            default:
+                                options.inputFormat = Options.FORMAT_DEFAULT;
+                        }
+
                         videoWidgetView.loadVideo(fileUri, options);
                     } else {
-                        options.inputType = Options.TYPE_STEREO_OVER_UNDER;
                         videoWidgetView.loadVideoFromAsset(fileUri.toString(), options);
                     }
                 } catch (IOException e) {

@@ -68,8 +68,8 @@ public class PanoActivity extends CordovaActivity {
     private void handleIntent(Intent intent) {
         String url = intent.getStringExtra("url");
         String optionsRaw = intent.getStringExtra("options");
-        JSONObject optionsJSON = new JSONObject(optionsRaw);
-        String inputTypeString = optionsJSON.getString("inputType");
+        // JSONObject optionsJSON = new JSONObject(optionsRaw);
+        // String inputTypeString = optionsJSON.getString("inputType");
 
         if (url != null) {
             fileUri = Uri.parse(url);
