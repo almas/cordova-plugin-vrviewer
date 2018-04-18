@@ -22,7 +22,6 @@ import java.io.InputStream;
 import org.apache.cordova.CordovaActivity;
 import org.json.JSONObject;
 
-
 public class PanoActivity extends CordovaActivity {
 
     private static final String TAG = PanoActivity.class.getSimpleName();
@@ -39,9 +38,11 @@ public class PanoActivity extends CordovaActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(getApplication().getResources().getIdentifier("vr_viewer_main","layout",getApplication().getPackageName()));
+        setContentView(getApplication().getResources().getIdentifier("vr_viewer_pano", "layout",
+                getApplication().getPackageName()));
 
-        panoWidgetView = (VrPanoramaView) findViewById(getApplication().getResources().getIdentifier("vr_view","id",getApplication().getPackageName()));
+        panoWidgetView = (VrPanoramaView) findViewById(
+                getApplication().getResources().getIdentifier("vr_view", "id", getApplication().getPackageName()));
         panoWidgetView.setDisplayMode(VrPanoramaView.DisplayMode.FULLSCREEN_MONO);
         panoWidgetView.setVisibility(View.INVISIBLE);
         panoWidgetView.setInfoButtonEnabled(false);
@@ -67,17 +68,24 @@ public class PanoActivity extends CordovaActivity {
 
     private void handleIntent(Intent intent) {
         String url = intent.getStringExtra("url");
+
         String optionsRaw = intent.getStringExtra("options");
-        // JSONObject optionsJSON = new JSONObject(optionsRaw);
-        // String inputTypeString = optionsJSON.getString("inputType");
+        String inputTypeStr = null;
+        try {
+            JSONObject optionsJSON = new JSONObject(optionsRaw);
+            inputTypeStr = optionsJSON.getString("inputType");
+        } catch (Exception e) {
+            Log.e(TAG, "aaaa JSON error: " + e.toString());
+        }
+
+        final String inputTypeString = inputTypeStr;
 
         if (url != null) {
             fileUri = Uri.parse(url);
             Log.d(TAG, "Using file " + fileUri.toString());
         } else {
             fileUri = null;
-            Toast.makeText(PanoActivity.this, "Image file does not exist", Toast.LENGTH_LONG)
-                    .show();
+            Toast.makeText(PanoActivity.this, "Image file does not exist", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -89,13 +97,16 @@ public class PanoActivity extends CordovaActivity {
                     Log.d(TAG, subString);
 
                     Options options = new Options();
+                    if (inputTypeString.equals("TYPE_STEREO_OVER_UNDER")) {
+                        options.inputType = Options.TYPE_STEREO_OVER_UNDER;
+                    } else {
+                        options.inputType = Options.TYPE_MONO;
+                    }
                     // if (subString.equalsIgnoreCase("http") || subString.equalsIgnoreCase("file")) {
 
                     // } else {
 
                     // }
-
-                    options.inputType = Options.TYPE_STEREO_OVER_UNDER;
 
                     panoWidgetView.loadImageFromBitmap(BitmapFactory.decodeFile(fileUri.getPath()), options);
 
@@ -148,21 +159,20 @@ public class PanoActivity extends CordovaActivity {
 
         @Override
         public void onDisplayModeChanged(int newDisplayMode) {
-            if (newDisplayMode != VrWidgetView.DisplayMode.FULLSCREEN_STEREO &&
-                    newDisplayMode != VrWidgetView.DisplayMode.FULLSCREEN_MONO){
+            if (newDisplayMode != VrWidgetView.DisplayMode.FULLSCREEN_STEREO
+                    && newDisplayMode != VrWidgetView.DisplayMode.FULLSCREEN_MONO) {
                 panoWidgetView.setVisibility(View.INVISIBLE);
                 that.finish();
             }
         }
+
         /**
          * Called by pano widget on the UI thread on any asynchronous error.
          */
         @Override
         public void onLoadError(String errorMessage) {
             // An error here is normally due to being unable to decode the pano format.
-            Toast.makeText(
-                    PanoActivity.this, "Error loading panorama image", Toast.LENGTH_LONG)
-                    .show();
+            Toast.makeText(PanoActivity.this, "Error loading panorama image", Toast.LENGTH_LONG).show();
             Log.e(TAG, "Error loading panorama image: " + errorMessage);
         }
 

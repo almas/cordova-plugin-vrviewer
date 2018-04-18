@@ -55,9 +55,11 @@ public class VideoActivity extends CordovaActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(getApplication().getResources().getIdentifier("vr_viewer_main","layout",getApplication().getPackageName()));
+        setContentView(getApplication().getResources().getIdentifier("vr_viewer_video", "layout",
+                getApplication().getPackageName()));
 
-        videoWidgetView = (VrVideoView) findViewById(getApplication().getResources().getIdentifier("vr_view","id",getApplication().getPackageName()));
+        videoWidgetView = (VrVideoView) findViewById(
+                getApplication().getResources().getIdentifier("vr_view", "id", getApplication().getPackageName()));
         videoWidgetView.setDisplayMode(VrVideoView.DisplayMode.FULLSCREEN_MONO);
         videoWidgetView.setVisibility(View.INVISIBLE);
         videoWidgetView.setInfoButtonEnabled(false);
@@ -90,23 +92,25 @@ public class VideoActivity extends CordovaActivity {
         String url = intent.getStringExtra("url");
 
         String optionsRaw = intent.getStringExtra("options");
-        String inputTypeString = null;
-        String inputFormatString = null;
+        String inputTypeStr = null;
+        String inputFormatStr = null;
         try {
             JSONObject optionsJSON = new JSONObject(optionsRaw);
-            inputTypeString = optionsJSON.getString("inputType");
-            inputFormatString = optionsJSON.getString("inputFormat");
-        } catch(Exception e) {
-            Log.e(TAG, "JSON error: " + e.toString());
+            inputTypeStr = optionsJSON.getString("inputType");
+            inputFormatStr = optionsJSON.getString("inputFormat");
+        } catch (Exception e) {
+            Log.e(TAG, "aaaa JSON error: " + e.toString());
         }
+
+        final String inputTypeString = inputTypeStr;
+        final String inputFormatString = inputFormatStr;
 
         if (url != null) {
             fileUri = Uri.parse(url);
             Log.d(TAG, "Using file " + fileUri.toString());
         } else {
             fileUri = null;
-            Toast.makeText(VideoActivity.this, "Video file does not exist", Toast.LENGTH_LONG)
-                    .show();
+            Toast.makeText(VideoActivity.this, "Video file does not exist", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -119,25 +123,20 @@ public class VideoActivity extends CordovaActivity {
 
                     Options options = new Options();
 
-                    switch(inputTypeString) {
-                        case "TYPE_STEREO_OVER_UNDER":
-                            options.inputFormat = Options.TYPE_STEREO_OVER_UNDER;
-                        break;
-                        default:
-                            options.inputType = Options.TYPE_MONO;
+                    if (inputTypeString.equals("TYPE_STEREO_OVER_UNDER")) {
+                        options.inputType = Options.TYPE_STEREO_OVER_UNDER;
+                    } else {
+                        options.inputType = Options.TYPE_MONO;
                     }
 
-                    if (subString.equalsIgnoreCase("http")) {
+                    if (subString.equalsIgnoreCase("http") || subString.equalsIgnoreCase("file")) {
 
-                        switch(inputFormatString) {
-                            case "FORMAT_DASH":
-                                options.inputFormat = Options.FORMAT_DASH;
-                            break;
-                            case "FORMAT_HLS":
-                                options.inputFormat = Options.FORMAT_HLS;
-                            break;
-                            default:
-                                options.inputFormat = Options.FORMAT_DEFAULT;
+                        if (inputFormatString.equals("FORMAT_DASH")) {
+                            options.inputFormat = Options.FORMAT_DASH;
+                        } else if (inputFormatString.equals("FORMAT_HLS")) {
+                            options.inputFormat = Options.FORMAT_HLS;
+                        } else {
+                            options.inputFormat = Options.FORMAT_DEFAULT;
                         }
 
                         videoWidgetView.loadVideo(fileUri, options);
@@ -151,8 +150,7 @@ public class VideoActivity extends CordovaActivity {
                     videoWidgetView.post(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(VideoActivity.this, "Unable to open video file", Toast.LENGTH_LONG)
-                                    .show();
+                            Toast.makeText(VideoActivity.this, "Unable to open video file", Toast.LENGTH_LONG).show();
                         }
                     });
                     Log.e(TAG, "Could not open video: " + e);
@@ -229,12 +227,13 @@ public class VideoActivity extends CordovaActivity {
 
         @Override
         public void onDisplayModeChanged(int newDisplayMode) {
-            if (newDisplayMode != VrWidgetView.DisplayMode.FULLSCREEN_STEREO &&
-                    newDisplayMode != VrWidgetView.DisplayMode.FULLSCREEN_MONO){
+            if (newDisplayMode != VrWidgetView.DisplayMode.FULLSCREEN_STEREO
+                    && newDisplayMode != VrWidgetView.DisplayMode.FULLSCREEN_MONO) {
                 videoWidgetView.setVisibility(View.INVISIBLE);
                 that.finish();
             }
         }
+
         /**
          * Called by video widget on the UI thread on any asynchronous error.
          */
@@ -242,9 +241,7 @@ public class VideoActivity extends CordovaActivity {
         public void onLoadError(String errorMessage) {
             // An error here is normally due to being unable to decode the video format.
             loadVideoStatus = LOAD_VIDEO_STATUS_ERROR;
-            Toast.makeText(
-                    VideoActivity.this, "Error loading video file", Toast.LENGTH_LONG)
-                    .show();
+            Toast.makeText(VideoActivity.this, "Error loading video file", Toast.LENGTH_LONG).show();
             Log.e(TAG, "Error loading video: " + errorMessage);
         }
 

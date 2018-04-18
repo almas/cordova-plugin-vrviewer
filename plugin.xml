@@ -79,7 +79,8 @@
         <source-file src="src/android/VRViewer.java" target-dir="src/com/cordova/plugin/vrviewer"/>
         <source-file src="src/android/view/VideoActivity.java" target-dir="src/com/cordova/plugin/vrviewer"/>
         <source-file src="src/android/view/PanoActivity.java" target-dir="src/com/cordova/plugin/vrviewer"/>
-        <source-file src="src/android/res/vr_viewer_main.xml" target-dir="res/layout"/>
+        <source-file src="src/android/res/vr_viewer_pano.xml" target-dir="res/layout"/>
+        <source-file src="src/android/res/vr_viewer_video.xml" target-dir="res/layout"/>
         <source-file src="src/android/res/ic_menu_back.png" target-dir="res/drawable"/>
     </platform>
 </plugin>
