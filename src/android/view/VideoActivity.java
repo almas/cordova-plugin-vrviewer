@@ -15,6 +15,7 @@ import com.google.vr.sdk.widgets.video.VrVideoView.Options;
 import java.io.IOException;
 
 import org.apache.cordova.CordovaActivity;
+import org.json.JSONObject;
 
 public class VideoActivity extends CordovaActivity {
 

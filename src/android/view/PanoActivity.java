@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.cordova.CordovaActivity;
+import org.json.JSONObject;
 
 public class PanoActivity extends CordovaActivity {
 
