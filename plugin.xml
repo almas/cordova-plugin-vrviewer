@@ -35,7 +35,7 @@
         <framework src="GLKit.framework"/>
         <framework src="AudioToolBox.framework"/>
 
-        <framework src="GVRKit" type="podspec" spec=">= 1.80.0" />
+        <framework src="GVRKit" type="podspec" spec=">= 1.120.0" />
 
         <header-file src="src/ios/VRViewerModule.h"/>
         <source-file src="src/ios/VRViewerModule.m"/>
