@@ -21,8 +21,8 @@
 - (void) playVideo: (CDVInvokedUrlCommand*)command {
     isVideo = YES;
     NSString* playUrl = [command.arguments objectAtIndex: 0];
-    NSString* inputTypeStr = [command.arguments objectAtIndex: 1];
-    NSString* inputFormatStr = [command.arguments objectAtIndex: 2];
+    NSString* optionsStr = [command.arguments objectAtIndex: 1];
+    NSString* inputTypeStr = [self getOptionType: optionsStr];
 
     if (playUrl == nil) {
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"arg was null"];
@@ -58,10 +58,10 @@
     }
 }
 
-
 - (void) startPano: (CDVInvokedUrlCommand*)command {
     NSString* imageUrl = [command.arguments objectAtIndex: 0];
-    NSString* inputTypeStr = [command.arguments objectAtIndex: 1];
+    NSString* optionsStr = [command.arguments objectAtIndex: 1];
+    NSString* inputTypeStr = [self getOptionType: optionsStr];
 
     if (imageUrl == nil) {
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"arg was null"];
@@ -98,6 +98,21 @@
     [self.panoView loadImage:image ofType:inputType];
 }
 
+
+- (NSString*) getOptionType: (NSString*)optionsStr {
+    NSString *res = nil;
+    NSDictionary *optionsJSON;
+    NSError *error;
+    Class NSJSONSerializationclass = NSClassFromString(@"NSJSONSerialization");
+    if (NSJSONSerializationclass) {
+        optionsJSON = [NSJSONSerialization JSONObjectWithData: optionsStr options: NSJSONReadingMutableContainers error: &error];
+    }
+    if (optionsJSON) {
+        res =[optionsJSON objectForKey:@"inputType"];
+    }
+
+    return res;
+}
 
 #pragma mark - GVRVideoViewDelegate
 

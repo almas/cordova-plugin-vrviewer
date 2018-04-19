@@ -32,10 +32,7 @@ public class VRViewer extends CordovaPlugin {
                     intent = new Intent(cordova.getActivity(), PanoActivity.class);
                 }
                 intent.putExtra("url", args.getString(0));
-                intent.putExtra("inputType", args.getString(1));
-                if (action.equals("playVideo")) {
-                    intent.putExtra("inputFormat", args.getString(2));
-                }
+                intent.putExtra("options", args.getString(1));
                 cordova.getActivity().startActivity(intent);
                 this.callbackContext.success(action);
             } else if (action.equals("stopVideo")) {
