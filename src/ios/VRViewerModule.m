@@ -105,7 +105,8 @@
     NSError *error;
     Class NSJSONSerializationclass = NSClassFromString(@"NSJSONSerialization");
     if (NSJSONSerializationclass) {
-        optionsJSON = [NSJSONSerialization JSONObjectWithData: optionsStr options: NSJSONReadingMutableContainers error: &error];
+        NSData *data = [optionsStr dataUsingEncoding:NSUTF8StringEncoding];
+        optionsJSON = [NSJSONSerialization JSONObjectWithData: data options: NSJSONReadingMutableLeaves error: &error];
     }
     if (optionsJSON) {
         res =[optionsJSON objectForKey:@"inputType"];
