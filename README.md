@@ -15,40 +15,47 @@ call the **vrViewer** function directly
 
 ## Play VR video ##
 ```
-var options = "{
-    'inputFormat': 'FORMAT_DEFAULT',
-    'inputType': 'TYPE_STEREO_OVER_UNDER'
-    }";
-
-vrViewer.playVideo(url, options);
+vrViewer.playVideo(pathOrUrl, inputType, inputFormat);
 ```
 
-* url: the VR video url, it also can be the fullpath of local video.
-* options: JSON string.
+* url: The equirectangular VR video url, it also can be the fullpath of local video.
+* inputType: panorama video type
+* inputFormat: video format
 
-### inputFormat: ###
+### inputFormat values: ###
     FORMAT_DASH: 	Indicates that the video uses the MPEG-DASH format.
     FORMAT_HLS:  	Indicates that the video uses the HTTP Live Streaming (HLS) format.
     FORMAT_DEFAULT:  	Indicates that the video is in a standalone, non-streaming format using container formats such as mp4, webm, ogg, aac.
-### inputType ###
+### inputType values: ###
     TYPE_MONO:  	Each video frame is a monocular equirectangular panorama.
     TYPE_STEREO_OVER_UNDER:  	Each video frame contains two vertically-stacked equirectangular panoramas.
+
+### Example: ###
+
+```
+vrViewer.playVideo(videoUrl, 'TYPE_STEREO_OVER_UNDER', 'FORMAT_DEFAULT');
+```
+
+## Stop VR video ##
 
 `vrViewer.stopVideo()`
 
 
+
 ## Play VR panorama image ##
 ```
-var options = "{
-    'inputType': 'TYPE_STEREO_OVER_UNDER'
-    }";
-
-vrViewer.startPanorama(url, options);
+vrViewer.startPanorama(pathOrUrl, inputType);
 ```
 
-* url: the VR image url, it also can be the fullpath of local image.
-* options: JSON string.
+### Example: ###
 
-### inputType ###
+```
+vrViewer.startPanorama(panoramaImagePath, 'TYPE_MONO');
+```
+
+* url: The equirectangular panorama image url, it also can be the fullpath of local image.
+* inputType: panorama image type
+
+### inputType values: ###
     TYPE_MONO:  	Image contains a single equirectangular panorama.
     TYPE_STEREO_OVER_UNDER:  	Image contains a pair of equally-sized equirectangular vertically-stacked panoramas.
