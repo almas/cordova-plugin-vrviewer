@@ -5,7 +5,9 @@ See [GVR](https://developers.google.com/vr) for more information.
 
 # Installation
 
-`$ cordova plugin add https://github.com/almas/cordova-plugin-vrviewer.git`
+```
+$ cordova plugin add https://github.com/almas/cordova-plugin-vrviewer.git
+```
 
 # How to use
 

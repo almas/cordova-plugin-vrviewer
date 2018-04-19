@@ -1,27 +1,28 @@
 {
-  "name": "cordova-plugin-vrviewer",
-  "version": "1.0.0",
-  "description": "GVR VR viewer plugin for Cordova",
-  "cordova": {
-    "id": "cordova-plugin-vrviewer",
-    "platforms": [
-      "ios"
-    ]
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/almas/cordova-plugin-vrviewer.git"
-  },
-  "keywords": [
-    "vr",
-    "ecosystem:cordova",
-    "cordova-android",
-    "cordova-ios"
-  ],
-  "author": "Almas",
-  "license": "Apache 2.0",
-  "bugs": {
-    "url": "https://github.com/almas/cordova-plugin-vrviewer/issues"
-  },
-  "homepage": "https://github.com/almas/cordova-plugin-vrviewer#readme"
+    "name": "cordova-plugin-vrviewer",
+    "version": "1.0.0",
+    "description": "GVR VR viewer plugin for Cordova",
+    "cordova": {
+        "id": "cordova-plugin-vrviewer",
+        "platforms": [
+            "ios",
+            "android"
+        ]
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/almas/cordova-plugin-vrviewer.git"
+    },
+    "keywords": [
+        "vrviewer",
+        "ecosystem:cordova",
+        "cordova-android",
+        "cordova-ios"
+    ],
+    "author": "Almas",
+    "license": "Apache 2.0",
+    "bugs": {
+        "url": "https://github.com/almas/cordova-plugin-vrviewer/issues"
+    },
+    "homepage": "https://github.com/almas/cordova-plugin-vrviewer#readme"
 }
