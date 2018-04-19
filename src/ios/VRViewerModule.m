@@ -47,7 +47,7 @@
     self.isPaused = NO;
 
     GVRVideoType inputType = kGVRVideoTypeStereoOverUnder;
-    if(inputTypeStr == "TYPE_MONO") {
+    if([inputTypeStr isEqualToString: @"TYPE_MONO"]) {
         inputType = kGVRVideoTypeMono;
     }
 
@@ -84,7 +84,7 @@
     [self.viewController.view addSubview:self.panoView];
 
     GVRPanoramaImageType inputType = kGVRPanoramaImageTypeStereoOverUnder;
-    if(inputTypeStr == "TYPE_MONO") {
+    if([inputTypeStr isEqualToString: @"TYPE_MONO"]) {
         inputType = kGVRPanoramaImageTypeMono;
     }
 
@@ -92,7 +92,7 @@
     if ([imageUrl hasPrefix:@"http"]) {
         NSURL *url = [NSURL URLWithString:imageUrl];
         NSData *data = [NSData dataWithContentsOfURL:url];
-        image = [[[UIImage alloc] initWithData:data] autorelease];
+        image = [[UIImage alloc] initWithData:data];
     }
 
     [self.panoView loadImage:image ofType:inputType];
