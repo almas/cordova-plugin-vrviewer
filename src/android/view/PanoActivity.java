@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.cordova.CordovaActivity;
-import org.json.JSONObject;
 
 public class PanoActivity extends CordovaActivity {
 
@@ -69,16 +68,7 @@ public class PanoActivity extends CordovaActivity {
     private void handleIntent(Intent intent) {
         String url = intent.getStringExtra("url");
 
-        String optionsRaw = intent.getStringExtra("options");
-        String inputTypeStr = null;
-        try {
-            JSONObject optionsJSON = new JSONObject(optionsRaw);
-            inputTypeStr = optionsJSON.getString("inputType");
-        } catch (Exception e) {
-            Log.e(TAG, "JSON error: " + e.toString());
-        }
-
-        final String inputTypeString = inputTypeStr;
+        final String inputTypeString = intent.getStringExtra("inputType");
 
         if (url != null) {
             fileUri = Uri.parse(url);

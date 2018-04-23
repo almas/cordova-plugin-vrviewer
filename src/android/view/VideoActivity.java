@@ -15,7 +15,6 @@ import com.google.vr.sdk.widgets.video.VrVideoView.Options;
 import java.io.IOException;
 
 import org.apache.cordova.CordovaActivity;
-import org.json.JSONObject;
 
 public class VideoActivity extends CordovaActivity {
 
@@ -91,19 +90,8 @@ public class VideoActivity extends CordovaActivity {
     private void handleIntent(Intent intent) {
         String url = intent.getStringExtra("url");
 
-        String optionsRaw = intent.getStringExtra("options");
-        String inputTypeStr = null;
-        String inputFormatStr = null;
-        try {
-            JSONObject optionsJSON = new JSONObject(optionsRaw);
-            inputTypeStr = optionsJSON.getString("inputType");
-            inputFormatStr = optionsJSON.getString("inputFormat");
-        } catch (Exception e) {
-            Log.e(TAG, "JSON error: " + e.toString());
-        }
-
-        final String inputTypeString = inputTypeStr;
-        final String inputFormatString = inputFormatStr;
+        final String inputTypeString = intent.getStringExtra("inputType");
+        final String inputFormatString = intent.getStringExtra("inputFormat");
 
         if (url != null) {
             fileUri = Uri.parse(url);
