@@ -29,6 +29,8 @@
         return;
     }
 
+    playUrl = [playUrl stringByReplacingOccurrencesOfString:@"file://"
+                                         withString:@""];
     self.currentCallbackId = command.callbackId;
 
     NSLog(@"VRViewerModule playVideo = %@", playUrl);
@@ -67,6 +69,8 @@
         return;
     }
 
+    imageUrl = [imageUrl stringByReplacingOccurrencesOfString:@"file://"
+                                                 withString:@""];
     self.currentCallbackId = command.callbackId;
 
     NSLog(@"VRViewerModule startPano = %@", imageUrl);
