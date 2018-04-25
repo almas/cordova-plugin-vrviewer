@@ -1,6 +1,6 @@
 {
     "name": "cordova-plugin-vrviewer",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "GVR VR viewer plugin for Cordova",
     "cordova": {
         "id": "cordova-plugin-vrviewer",
