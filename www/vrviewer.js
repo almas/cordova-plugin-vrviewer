@@ -23,7 +23,11 @@ function checkOptionsAndExec(fnName, url, options, successCallback, errorCallbac
         options.inputFormat = 'FORMAT_DEFAULT';
     }
 
-    var args = [url, options.inputType, options.inputFormat];
+    if(options.fromAsset === undefined) {
+        options.fromAsset = false;
+    }
+
+    var args = [url, options.inputType, options.inputFormat, options.fromAsset];
 
     exec(successCallback, errorCallback, "VRViewer", fnName, args);
 }

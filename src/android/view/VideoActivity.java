@@ -92,6 +92,7 @@ public class VideoActivity extends CordovaActivity {
 
         final String inputTypeString = intent.getStringExtra("inputType");
         final String inputFormatString = intent.getStringExtra("inputFormat");
+        final Boolean fromAsset = intent.getBooleanExtra("fromAsset", false);
 
         if (url != null) {
             fileUri = Uri.parse(url);
@@ -117,8 +118,9 @@ public class VideoActivity extends CordovaActivity {
                         options.inputType = Options.TYPE_MONO;
                     }
 
-                    if (subString.equalsIgnoreCase("http") || subString.equalsIgnoreCase("file")) {
-
+                    if (fromAsset) {
+                        videoWidgetView.loadVideoFromAsset(fileUri.toString(), options);
+                    } else {
                         if (inputFormatString.equals("FORMAT_DASH")) {
                             options.inputFormat = Options.FORMAT_DASH;
                         } else if (inputFormatString.equals("FORMAT_HLS")) {
@@ -128,9 +130,8 @@ public class VideoActivity extends CordovaActivity {
                         }
 
                         videoWidgetView.loadVideo(fileUri, options);
-                    } else {
-                        videoWidgetView.loadVideoFromAsset(fileUri.toString(), options);
                     }
+
                 } catch (IOException e) {
                     // An error here is normally due to being unable to locate the file.
                     loadVideoStatus = LOAD_VIDEO_STATUS_ERROR;

@@ -30,12 +30,16 @@ vrViewer.playVideo(pathOrUrl [, options]);
     FORMAT_DASH: 	Indicates that the video uses the MPEG-DASH format.
     FORMAT_HLS:  	Indicates that the video uses the HTTP Live Streaming (HLS) format.
 
+### fromAsset: ###
+    If video is from assets then it should be true. Android only. Default is false.
+
 ### Example: ###
 
 ```
 var options = {
         inputType: 'TYPE_STEREO_OVER_UNDER',
-        inputFormat: 'FORMAT_DEFAULT'
+        inputFormat: 'FORMAT_DEFAULT',
+        fromAsset: false
     };
 
 vrViewer.playVideo(url, options);
