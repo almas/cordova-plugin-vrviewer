@@ -3,8 +3,12 @@ package com.cordova.plugin.vrviewer;
 import java.io.IOException;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -14,10 +18,10 @@ import com.google.vr.sdk.widgets.common.VrWidgetView;
 import com.google.vr.sdk.widgets.pano.VrPanoramaEventListener;
 import com.google.vr.sdk.widgets.pano.VrPanoramaView;
 import com.google.vr.sdk.widgets.pano.VrPanoramaView.Options;
+import com.google.zxing.common.BitArray;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.lang.reflect.Array;
+import java.net.URL;
 
 import org.apache.cordova.CordovaActivity;
 
@@ -29,6 +33,25 @@ public class PanoActivity extends CordovaActivity {
     private CordovaActivity that = null;
 
     private Uri fileUri;
+
+    private class DownloadFilesTask extends AsyncTask<String, Integer, Bitmap> {
+
+        protected Bitmap doInBackground(String... url) {
+            Bitmap img;
+            try {
+                img = BitmapFactory.decodeStream(new URL(url[0]).openStream());
+            } catch (IOException e) {
+                Log.e(TAG, "Could not download image");
+                img = null;
+            }
+
+            return img;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            Log.i(TAG, "Loaded Successfully");
+        }
+    }
 
     /**
      * Called when the activity is first created.
@@ -92,14 +115,11 @@ public class PanoActivity extends CordovaActivity {
                     } else {
                         options.inputType = Options.TYPE_MONO;
                     }
-                    // if (subString.equalsIgnoreCase("http") || subString.equalsIgnoreCase("file")) {
-
-                    // } else {
-
-                    // }
-
-                    panoWidgetView.loadImageFromBitmap(BitmapFactory.decodeFile(fileUri.getPath()), options);
-
+                    if (subString.equalsIgnoreCase("http")) {
+                        panoWidgetView.loadImageFromBitmap(new DownloadFilesTask().execute(fileUri.toString()).get(), options);
+                    } else {
+                        panoWidgetView.loadImageFromBitmap(BitmapFactory.decodeFile(fileUri.getPath()), options);
+                    }
                 } catch (Exception e) {
                     // Since this is a background thread, we need to switch to the main thread to show a toast.
                     panoWidgetView.post(new Runnable() {
